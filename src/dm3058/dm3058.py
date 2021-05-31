@@ -463,3 +463,126 @@ class dm3058:
             )
 
         return self.instr.query(cmd)
+
+    # --- RATE commands ----
+
+    def set_reading_rate(self, function, mode=None, rate="S"):
+        """Set the reading rate for a given measurement function.
+
+        Parameters
+        ----------
+        function : str
+            Measurement function: voltage, current, or resistance.
+        mode : str or None
+            Mode of the measurement function. The valid modes for each function that
+            has multiple modes are:
+                voltage: dc (defualt), ac
+                current: dc (defualt), ac
+                resistance: 2-wire (defualt), 4-wire
+
+            If `None`, the default mode is selected.
+        rate : str
+            Reading rate: "S", "M", or "F" corresponding to slow, medium, or fast
+            rates, respectively. The reading rate impacts the reading resolution, i.e.
+            slower rates have higher resolution.
+        """
+        cmd = ":RATE"
+
+        if function == "voltage":
+            cmd += ":VOLT"
+            if (mode is None) or (mode == "dc"):
+                cmd += "DC"
+            elif mode == "ac":
+                cmd += "AC"
+            else:
+                raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
+        elif function == "current":
+            cmd += ":CURR"
+            if (mode is None) or (mode == "dc"):
+                cmd += "DC"
+            elif mode == "ac":
+                cmd += "AC"
+            else:
+                raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
+        elif function == "resistance":
+            if (mode is None) or (mode == "2-wire"):
+                cmd += ":RES"
+            elif mode == "4-wire":
+                cmd += ":FRES"
+            else:
+                raise ValueError(
+                    f"Invalid resistance mode: {mode}. Must be '2-wire' or '4-wire'."
+                )
+        else:
+            raise ValueError(
+                f"Invalid function: {function}. Must be 'voltage', 'current', "
+                + "or 'resistance'."
+            )
+
+        if rate not in ["S", "M", "F"]:
+            raise ValueError(f"Invalid rate: {rate}. Must be 'S', 'M', or 'F'.")
+
+        cmd += f" {rate}"
+
+        self.instr.write(cmd)
+
+    def get_reading_rate(self, function, mode=None):
+        """Query the reading rate for a given measurement function.
+
+        This command is only valid if the queried function is the same as the currently
+        selected measurement function.
+
+        Parameters
+        ----------
+        function : str
+            Measurement function: voltage, current, or resistance.
+        mode : str or None
+            Mode of the measurement function. The valid modes for each function that
+            has multiple modes are:
+                voltage: dc (defualt), ac
+                current: dc (defualt), ac
+                resistance: 2-wire (defualt), 4-wire
+
+            If `None`, the default mode is selected.
+
+        Returns
+        -------
+        rate : str
+            Reading rate: "S", "M", or "F" corresponding to slow, medium, or fast
+            rates, respectively. The reading rate impacts the reading resolution, i.e.
+            slower rates have higher resolution.
+        """
+        cmd = ":RATE"
+
+        if function == "voltage":
+            cmd += ":VOLT"
+            if (mode is None) or (mode == "dc"):
+                cmd += "DC?"
+            elif mode == "ac":
+                cmd += "AC?"
+            else:
+                raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
+        elif function == "current":
+            cmd += ":CURR"
+            if (mode is None) or (mode == "dc"):
+                cmd += "DC?"
+            elif mode == "ac":
+                cmd += "AC?"
+            else:
+                raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
+        elif function == "resistance":
+            if (mode is None) or (mode == "2-wire"):
+                cmd += ":RES?"
+            elif mode == "4-wire":
+                cmd += ":FRES?"
+            else:
+                raise ValueError(
+                    f"Invalid resistance mode: {mode}. Must be '2-wire' or '4-wire'."
+                )
+        else:
+            raise ValueError(
+                f"Invalid function: {function}. Must be 'voltage', 'current', "
+                + "or 'resistance'."
+            )
+
+        return self.instr.query(cmd)

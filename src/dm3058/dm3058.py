@@ -65,7 +65,7 @@ class dm3058:
         id : str
             Identification string.
         """
-        return self.instr.query("*IDN?")
+        return self.instr.query("*IDN?").strip("\n")
 
     def reset(self):
         """Reset the instrument to the factory default configuration."""
@@ -81,7 +81,7 @@ class dm3058:
         function : str
             Current measurment function.
         """
-        return self.instr.query(":FUNC?")
+        return self.instr.query(":FUNC?").strip("\n")
 
     def set_function(self, function, mode=None):
         """Set the current measurement function.
@@ -105,17 +105,17 @@ class dm3058:
         if function == "voltage":
             cmd += ":VOLT"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "current":
             cmd += ":CURR"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "resistance":
@@ -157,7 +157,7 @@ class dm3058:
         new_data_acquired : bool
             Flag indicating whether new data has been acquired.
         """
-        ret = self.instr.query(":MEAS?")
+        ret = self.instr.query(":MEAS?").strip("\n")
 
         if ret == "TRUE":
             return True
@@ -214,17 +214,17 @@ class dm3058:
         if function == "voltage":
             cmd += ":VOLT"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "current":
             cmd += ":CURR"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "resistance":
@@ -276,17 +276,17 @@ class dm3058:
         if function == "voltage":
             cmd += ":VOLT"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "current":
             cmd += ":CURR"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "resistance":
@@ -312,7 +312,7 @@ class dm3058:
 
         cmd += ":RANG?"
 
-        return self.instr.query(cmd)
+        return int(self.instr.query(cmd).strip("\n"))
 
     def set_dc_voltage_measurement_impedance(self, impedance="10M"):
         """Set the input impedance for DC voltage measurements.
@@ -341,7 +341,7 @@ class dm3058:
                 "10M" : 10 MOhms
                 "10G" : > 10 GOhms
         """
-        return self.instr.query(":MEAS:VOLT:DC:IMPE?")
+        return self.instr.query(":MEAS:VOLT:DC:IMPE?").strip("\n")
 
     def set_ac_filter_state(self, function, state):
         """Set the AC filter state for DC voltage or current measurements.
@@ -399,7 +399,7 @@ class dm3058:
 
         cmd += f":DC:FILT?"
 
-        return self.instr.query(cmd)
+        return int(self.instr.query(cmd).strip("\n"))
 
     def measure(self, function, mode):
         """Perform a measurement using the selected function.
@@ -423,17 +423,17 @@ class dm3058:
         if function == "voltage":
             cmd += ":VOLT"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC?"
+                cmd += ":DC?"
             elif mode == "ac":
-                cmd += "AC?"
+                cmd += ":AC?"
             else:
                 raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "current":
             cmd += ":CURR"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC?"
+                cmd += ":DC?"
             elif mode == "ac":
-                cmd += "AC?"
+                cmd += ":AC?"
             else:
                 raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "resistance":
@@ -462,7 +462,7 @@ class dm3058:
                 + "'capacitance'."
             )
 
-        return self.instr.query(cmd)
+        return float(self.instr.query(cmd).strip("\n"))
 
     # --- RATE commands ----
 
@@ -491,17 +491,17 @@ class dm3058:
         if function == "voltage":
             cmd += ":VOLT"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "current":
             cmd += ":CURR"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC"
+                cmd += ":DC"
             elif mode == "ac":
-                cmd += "AC"
+                cmd += ":AC"
             else:
                 raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "resistance":
@@ -557,17 +557,17 @@ class dm3058:
         if function == "voltage":
             cmd += ":VOLT"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC?"
+                cmd += ":DC?"
             elif mode == "ac":
-                cmd += "AC?"
+                cmd += ":AC?"
             else:
                 raise ValueError(f"Invalid voltage mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "current":
             cmd += ":CURR"
             if (mode is None) or (mode == "dc"):
-                cmd += "DC?"
+                cmd += ":DC?"
             elif mode == "ac":
-                cmd += "AC?"
+                cmd += ":AC?"
             else:
                 raise ValueError(f"Invalid current mode: {mode}. Must be 'ac' or 'dc'.")
         elif function == "resistance":
@@ -585,4 +585,4 @@ class dm3058:
                 + "or 'resistance'."
             )
 
-        return self.instr.query(cmd)
+        return self.instr.query(cmd).strip("\n")

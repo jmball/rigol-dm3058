@@ -29,17 +29,16 @@ with dm3058() as dmm:
     print(f"Connected to {dmm.get_id()}!\n")
 
     # setup the dmm for dc voltage measurement
-    dmm.set_function("voltage", "dc")
+    dmm.set_function("current", "dc")
     dmm.enable_autorange(True)
-    dmm.set_dc_voltage_measurement_impedance("10G")
-    dmm.set_reading_rate("voltage", "dc", "S")
+    dmm.set_reading_rate("current", "dc", "S")
 
     input(
-        "Connect a DC voltage source to the input of the DMM. Press Enter when "
+        "Connect a DC current source to the input of the DMM. Press Enter when "
         + "ready...\n"
     )
 
     # perform the measurement
-    voltage = dmm.measure("voltage", "dc")
+    current = dmm.measure("current", "dc")
 
-    print(f"Measured voltage: {voltage} V")
+    print(f"Measured current: {current} A")
